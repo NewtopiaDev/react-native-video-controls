@@ -83,6 +83,7 @@ export default class VideoPlayer extends Component {
     this.methods = {
       onBack: this.props.onBack || this._onBack.bind(this),
       toggleFullscreen: this._toggleFullscreen.bind(this),
+      toggleSubtitle: this._toggleSubtitle.bind(this),
       togglePlayPause: this._togglePlayPause.bind(this),
       toggleControls: this._toggleControls.bind(this),
       toggleTimer: this._toggleTimer.bind(this)
@@ -382,6 +383,20 @@ export default class VideoPlayer extends Component {
       state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
 
       this.setState(state);
+    }
+  }
+
+  /**
+   * Toggle subtitle changes whether or 
+   * not to display subtitles.
+   */
+  _toggleSubtitle() {
+    if (this.props.toggleSubtitle) {
+      this.props.toggleSubtitle();
+    } else {
+      this.setState({
+        subtitle: !this.state.subtitle
+      });
     }
   }
 
@@ -822,6 +837,9 @@ export default class VideoPlayer extends Component {
     const fullscreenControl = !this.props.disableFullscreen
       ? this.renderFullscreen()
       : this.renderNullControl();
+    const subtitleControl = !this.props.disableSubtitle
+      ? this.renderSubtitleControl()
+      : this.renderNullControl();
 
     return (
       <Animated.View
@@ -841,6 +859,7 @@ export default class VideoPlayer extends Component {
             <View style={styles.controls.pullRight}>
               {volumeControl}
               {fullscreenControl}
+              {subtitleControl}
             </View>
           </View>
         </ImageBackground>
@@ -898,6 +917,17 @@ export default class VideoPlayer extends Component {
       <Image source={source} />,
       this.methods.toggleFullscreen,
       styles.controls.fullscreen
+    );
+  }
+
+  /**
+   * Render fullscreen toggle and set icon based on the fullscreen state.
+   */
+  renderSubtitleControl() {
+    return this.renderControl(
+      <Image source={require('./assets/img/my_expand.png')} />,
+      this.methods.toggleSubtitle,
+      styles.controls.subtitle
     );
   }
 
@@ -1070,17 +1100,26 @@ export default class VideoPlayer extends Component {
     }
     return null;
   }
+  
   renderSubtitle() {
-    return (
-      <View
-        style={
-          this.props.isFullscreen
-            ? styles.player.subtitleContainerLandscape
-            : styles.player.subtitleContainerPortrait
-        }>
-        <Text style={styles.player.subtitle}>{this.showSubtitle()}</Text>
-      </View>
-    );
+    if (this.state.subtitle) {
+      const text = this.showSubtitle()
+      if (text) {
+        return (
+          <View
+            style={[
+              (this.props.isFullscreen
+                ? styles.player.subtitleContainerLandscape
+                : styles.player.subtitleContainerPortrait),
+              this.props.subtitleContainerStyle
+            ]}>
+            <Text style={[styles.player.subtitle, this.props.subtitleStyle]}>
+              {text}
+            </Text>
+          </View>
+        );
+      }
+    }
   }
 
   /**
