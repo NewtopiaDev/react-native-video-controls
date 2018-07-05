@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-wcag",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Improve subtitle suppoort of awesome-react-native-vide-controls",
   "license": "MIT",
   "main": "VideoPlayer.js",

@@ -1219,7 +1219,9 @@ const styles = {
       alignItems: 'center'
     },
     icon: {
-      marginBottom: 16
+      marginBottom: 16,
+      width: 25,
+      height: 25,
     },
     text: {
       backgroundColor: 'transparent',
@@ -1378,12 +1380,12 @@ const styles = {
       width: 28
     },
     circle: {
-      borderRadius: 12,
+      borderRadius: 25,
       position: 'relative',
-      top: 8,
-      left: 8,
-      height: 12,
-      width: 12
+      top: 0,
+      left: 0,
+      height: 25,
+      width: 25
     }
   })
 };
