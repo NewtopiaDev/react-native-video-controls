@@ -925,7 +925,7 @@ export default class VideoPlayer extends Component {
    */
   renderSubtitleControl() {
     return this.renderControl(
-      <Image source={require('./assets/img/my_expand.png')} />,
+      <Image source={require('./assets/img/subtitle.png')} />,
       this.methods.toggleSubtitle,
       styles.controls.subtitle
     );
