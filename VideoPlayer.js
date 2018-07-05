@@ -532,6 +532,14 @@ export default class VideoPlayer extends Component {
   seekTo(time = 0) {
     let state = this.state;
     state.currentTime = time;
+    state.currentTimeInDeciSeconds = Math.floor(time * 10) / 10.0;
+    if (this.props.subtitle) {
+      state.subtitleIndex = this.props.subtitle.findIndex(i => {
+        const startTime = this.parseTimeStringToDeciSecond(i.startTime)
+        const endTime = this.parseTimeStringToDeciSecond(i.endTime)
+        return startTime < time && time < endTime
+      })
+    }
     this.player.ref.seek(time);
     this.setState(state);
   }
