@@ -1350,9 +1350,11 @@ const styles = {
     },
     handle: {
       position: 'absolute',
+      alignItems: 'center',
       marginTop: -24,
       marginLeft: -24,
-      padding: 16
+      width: 25,
+      height: 25,
     }
   }),
   seekbar: StyleSheet.create({
