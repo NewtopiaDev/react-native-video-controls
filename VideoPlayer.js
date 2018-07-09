@@ -24,6 +24,8 @@ export default class VideoPlayer extends Component {
      * All of our values that are updated by the
      * methods and listeners in this class
      */
+    this.subtitleIndex = 0
+
     this.state = {
       // Video
       resizeMode: this.props.resizeMode || 'contain',
@@ -51,7 +53,7 @@ export default class VideoPlayer extends Component {
       duration: 0,
 
       //Subtitle
-      subtitleIndex: 0,
+      // subtitleIndex: 0,
       currentTimeInDeciSeconds: 0
     };
 
@@ -533,13 +535,6 @@ export default class VideoPlayer extends Component {
     let state = this.state;
     state.currentTime = time;
     state.currentTimeInDeciSeconds = Math.floor(time * 10) / 10.0;
-    if (this.props.subtitle) {
-      state.subtitleIndex = this.props.subtitle.findIndex(i => {
-        const startTime = this.parseTimeStringToDeciSecond(i.startTime)
-        const endTime = this.parseTimeStringToDeciSecond(i.endTime)
-        return startTime < time && time < endTime
-      })
-    }
     this.player.ref.seek(time);
     this.setState(state);
   }
@@ -776,26 +771,50 @@ export default class VideoPlayer extends Component {
     for (let i = 0; i < 3; i++) {
       result += splitByColon[i] * Math.pow(60, 2 - i);
     }
-    return (Math.floor(result * 10) / 10.0).toFixed(1);
+    return (Math.floor(result * 10) / 10.0)
   };
+  updateIndex(currentTime, starting = 0) {
+    let index = starting,
+        startTime,
+        endTime,
+        nextStartTime,
+        prevEndTime
+        
+    while (index >= 0) {
+      const curSub = this.props.subtitle[index]
+      const prevSub = this.props.subtitle[index - 1]
+      const nextSub = this.props.subtitle[index + 1]
+
+      startTime = this.parseTimeStringToDeciSecond(curSub.startTime)
+      endTime = this.parseTimeStringToDeciSecond(curSub.endTime)
+      prevEndTime = prevSub ? this.parseTimeStringToDeciSecond(prevSub.endTime) : 0
+      nextStartTime = nextSub ? this.parseTimeStringToDeciSecond(nextSub.startTime) : Number.MAX_SAFE_INTEGER
+      if (currentTime < startTime && currentTime < prevEndTime) index --
+      else if (currentTime > endTime && currentTime > nextStartTime) index ++
+      else break
+    }
+    return index < 0 ? 0 : index
+  }
   showSubtitle() {
     if (!this.props.subtitle) return null;
     let currentTime = this.state.currentTimeInDeciSeconds;
-    let subtitleIndex = this.state.subtitleIndex;
     let subtitles = this.props.subtitle;
-    if (!subtitles[subtitleIndex])
+    if (!subtitles[this.subtitleIndex])
       return null;
+    
     let startTime = this.parseTimeStringToDeciSecond(
-      subtitles[subtitleIndex].startTime
-    );
+      subtitles[this.subtitleIndex].startTime
+    )
     let endTime = this.parseTimeStringToDeciSecond(
-      subtitles[subtitleIndex].endTime
-    );
-    if (currentTime > endTime)
-      this.setState({ subtitleIndex: subtitleIndex + 1 });
-    if (currentTime < endTime && currentTime > startTime) {
-      return subtitles[subtitleIndex].text;
-    } else return null;
+      subtitles[this.subtitleIndex].endTime
+    )
+
+    if (currentTime < startTime || currentTime > endTime)
+      this.subtitleIndex = this.updateIndex(currentTime, this.subtitleIndex)
+    
+    if (currentTime <= endTime && currentTime >= startTime)
+      return subtitles[this.subtitleIndex].text
+    else return null;
   }
   /**End of Subtitle Part */
   /**
