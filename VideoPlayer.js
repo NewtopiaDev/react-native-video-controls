@@ -842,7 +842,7 @@ export default class VideoPlayer extends Component {
         activeOpacity={0.3}
         onPress={() => {
           this.resetControlTimeout();
-          callback();
+          callback && callback();
         }}
         style={[styles.controls.control, style]}>
         {children}
