@@ -1140,7 +1140,10 @@ export default class VideoPlayer extends Component {
                 : styles.player.subtitleContainerPortrait),
               this.props.subtitleContainerStyle
             ]}>
-            <Text style={[styles.player.subtitle, this.props.subtitleStyle]}>
+            <Text 
+              style={[styles.player.subtitle, this.props.subtitleStyle]}
+              accessible={this.props.accessibleSubtitles || false}
+            >
               {text}
             </Text>
           </View>
