@@ -835,9 +835,11 @@ export default class VideoPlayer extends Component {
    * consistent <TouchableHighlight>
    * wrapper and styling.
    */
-  renderControl(children, callback, style = {}) {
+  renderControl(children, callback, style = {}, accessibilityText) {
     return (
       <TouchableHighlight
+        accessible={true}
+        accessibilityLabel={accessibilityText}
         underlayColor="transparent"
         activeOpacity={0.3}
         onPress={() => {
@@ -904,7 +906,8 @@ export default class VideoPlayer extends Component {
         style={styles.controls.back}
       />,
       this.methods.onBack,
-      styles.controls.back
+      styles.controls.back,
+      'Navigate up button, double tap to activate'
     );
   }
 
@@ -922,7 +925,9 @@ export default class VideoPlayer extends Component {
         />
         <View
           style={[styles.volume.handle, { left: this.state.volumePosition }]}
-          {...this.player.volumePanResponder.panHandlers}>
+          {...this.player.volumePanResponder.panHandlers}
+          accessible={true}
+          accessibilityLabel="Volume button, double tap to activate and hold to long press to change volume">
           <Image
             style={styles.volume.icon}
             source={require('./assets/img/volume.png')}
@@ -954,7 +959,8 @@ export default class VideoPlayer extends Component {
     return this.renderControl(
       <Image source={require('./assets/img/subtitle.png')} />,
       this.methods.toggleSubtitle,
-      styles.controls.subtitle
+      styles.controls.subtitle,
+      "Close caption button, double tap to activate"
     );
   }
 
@@ -1043,7 +1049,8 @@ export default class VideoPlayer extends Component {
     return this.renderControl(
       <Image source={source} />,
       this.methods.togglePlayPause,
-      styles.controls.playPause
+      styles.controls.playPause,
+      this.state.paused === true ? "Play video button, double tap to activate" : "pause video button, double tap to activate"
     );
   }
 
@@ -1158,6 +1165,7 @@ export default class VideoPlayer extends Component {
   render() {
     return (
       <TouchableWithoutFeedback
+        accessible={false}
         onPress={this.events.onScreenTouch}
         style={[styles.player.container, this.styles.containerStyle]}>
         <View style={[styles.player.container, this.styles.containerStyle]}>
