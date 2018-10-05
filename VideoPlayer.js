@@ -466,6 +466,28 @@ export default class VideoPlayer extends Component {
     return `${symbol}${formattedMinutes}:${formattedSeconds}`;
   }
 
+  formatTimeAccessible(time = 0) {
+    const flooredSeconds = Math.floor(time % 60)
+    const flooredMinutes = Math.floor(time / 60)
+    
+    if (flooredMinutes == 0) {
+      if (flooredSeconds < 1) {
+        return `${flooredSeconds} second`
+      }
+      else {
+        return `${flooredSeconds} seconds`
+      }
+    }
+    else {
+      if (flooredSeconds < 1) {
+        return `${flooredMinutes} minutes and ${flooredSeconds} second`
+      }
+      else {
+        return `${flooredMinutes} minutes and ${flooredSeconds} seconds`
+      }
+    }
+  }
+
   /**
    * Set the position of the seekbar's components
    * (both fill and handle) according to the
@@ -1032,6 +1054,8 @@ export default class VideoPlayer extends Component {
               styles.seekbar.circle,
               { backgroundColor: this.props.seekColor || '#FFF' }
             ]}
+            accessible={true}
+            accessibilityLabel={`${this.formatTimeAccessible(this.state.currentTime)} of ${this.formatTimeAccessible(this.state.duration)} hold to long press to change playtime`}
           />
         </View>
       </View>
