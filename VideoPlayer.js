@@ -857,10 +857,10 @@ export default class VideoPlayer extends Component {
    * consistent <TouchableHighlight>
    * wrapper and styling.
    */
-  renderControl(children, callback, style = {}, accessibilityText) {
+  renderControl(children, isAccessible, callback, style = {}, accessibilityText) {
     return (
       <TouchableHighlight
-        accessible={true}
+        accessible={isAccessible}
         accessibilityLabel={accessibilityText}
         underlayColor="transparent"
         activeOpacity={0.3}
@@ -922,11 +922,13 @@ export default class VideoPlayer extends Component {
    * Back button control
    */
   renderBack() {
+    let accessible = true
     return this.renderControl(
       <Image
         source={require('./assets/img/back.png')}
         style={styles.controls.back}
       />,
+      accessible,
       this.methods.onBack,
       styles.controls.back,
       'Navigate up button, double tap to activate'
@@ -963,12 +965,14 @@ export default class VideoPlayer extends Component {
    * Render fullscreen toggle and set icon based on the fullscreen state.
    */
   renderFullscreen() {
+    let accessible = true
     let source =
       this.props.isFullscreen === true
         ? require('./assets/img/my_shrink.png')
         : require('./assets/img/my_expand.png');
     return this.renderControl(
       <Image source={source} />,
+      accessible,
       this.methods.toggleFullscreen,
       styles.controls.fullscreen
     );
@@ -978,8 +982,10 @@ export default class VideoPlayer extends Component {
    * Render fullscreen toggle and set icon based on the fullscreen state.
    */
   renderSubtitleControl() {
+    let accessible = true
     return this.renderControl(
       <Image source={require('./assets/img/subtitle.png')} />,
+      accessible,
       this.methods.toggleSubtitle,
       styles.controls.subtitle,
       "Close caption button, double tap to activate"
@@ -1066,12 +1072,14 @@ export default class VideoPlayer extends Component {
    * Render the play/pause button and show the respective icon
    */
   renderPlayPause() {
+    let accessible = true
     let source =
       this.state.paused === true
         ? require('./assets/img/play.png')
         : require('./assets/img/pause.png');
     return this.renderControl(
       <Image source={source} />,
+      accessible,
       this.methods.togglePlayPause,
       styles.controls.playPause,
       this.state.paused === true ? "Play video button, double tap to activate" : "pause video button, double tap to activate"
@@ -1101,8 +1109,10 @@ export default class VideoPlayer extends Component {
    * Show our timer.
    */
   renderTimer() {
+    let accessible = true
     return this.renderControl(
       <Text style={styles.controls.timerText}>{this.calculateTime()}</Text>,
+      accessible,
       this.methods.toggleTimer,
       styles.controls.timer
     );
@@ -1112,7 +1122,8 @@ export default class VideoPlayer extends Component {
    * Renders an empty control, used to disable a control without breaking the view layout.
    */
   renderNullControl() {
-    return this.renderControl(<View />);
+    let accessible = false
+    return this.renderControl(<View />, accessible);
   }
 
   /**
