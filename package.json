@@ -1,7 +1,7 @@
 {
   "name": "react-native-video-wcag",
-  "version": "1.2.0",
-  "description": "Improve subtitle suppoort of awesome-react-native-vide-controls",
+  "version": "1.2.1",
+  "description": "Improve subtitle support of awesome-react-native-vide-controls",
   "license": "MIT",
   "main": "VideoPlayer.js",
   "keywords": [
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NewtopiaDev/parseSRT.git"
+    "url": "git+https://github.com/NewtopiaDev/react-native-video-wcag.git"
   },
   "dependencies": {
     "lodash": "^4.16.4"
